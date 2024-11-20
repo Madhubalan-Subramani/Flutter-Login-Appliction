@@ -23,8 +23,8 @@ class LoginFormWidget extends StatelessWidget {
           children: [
             InputFormField(
               prefixIcon: Icons.person_outline,
-              labelText: '$username / $email / $phoneNo',
-              hintText: '$username / $email / $phoneNo',
+              labelText: email,
+              hintText: email,
               keyboardType: TextInputType.emailAddress,
               controller: loginController.userNameEmailPhoneController,
               validator: (value) {
@@ -35,26 +35,19 @@ class LoginFormWidget extends StatelessWidget {
               },
             ),
             const SizedBox(height: formInputHeight),
-            TextFormField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.fingerprint),
-                labelText: password,
-                hintText: password,
-                hintStyle: inputText,
-                labelStyle: bodyText2,
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.remove_red_eye),
-                ),
-                border: const OutlineInputBorder(),
-              ),
-              style: GoogleFonts.poppins(textStyle: const TextStyle()),
+            InputFormField(
+              prefixIcon: Icons.fingerprint,
+              labelText: password,
+              hintText: password,
+              obscureText: true,
               controller: loginController.passwordController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your password';
                 } else if (value.length < 6) {
                   return 'Password should be at least 6 characters long';
+                } else if (!RegExp(r'^(?=.*[0-9])').hasMatch(value)) {
+                  return 'Password should contain at least one number';
                 }
                 return null;
               },

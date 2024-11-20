@@ -1,7 +1,8 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:login/src/features/authentication/controllers/auth_service.dart';
 
 class ForgetPasswordMailController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -11,34 +12,32 @@ class ForgetPasswordMailController extends GetxController {
     String email = emailController.text.trim();
 
     try {
-      // Check if the email exists in Firestore
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('signup_user')
-          .where('user_email', isEqualTo: email)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        // If email exists, send an OTP to the email
-        await sendOtp(email);
-        // Navigate to the email OTP screen
-        Get.toNamed('/emailOtpScreen');
+      if (email.isEmpty) {
+        Get.snackbar('Error', 'Enter Email Id');
+      } else if (!email.endsWith('@gmail.com')) {
+        Get.snackbar('Error', 'Enter valid Email Id');
       } else {
-        Get.snackbar('Error', 'Email does not exist');
+        await AuthService().resetPasswordEmail(email).then((value) {
+          if (value == "reset Password Successfully") {
+            Get.snackbar('Success', 'OTP sent to $email');
+            Get.toNamed("loginScreen");
+          } else {
+            Get.snackbar('Error', value);
+          }
+        });
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to verify email: $e');
     }
   }
 
-  // Method to send OTP to the email
-  Future<void> sendOtp(String email) async {
+  // Method to verify OTP to the email
+  Future<void> verifyOtp(String email, String otpCode) async {
     try {
-      print('Sending OTP to email: $email');
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Get.snackbar('Success', 'OTP sent to your email');
+      var res = EmailAuth(sessionName: '')
+          .validateOtp(recipientMail: email, userOtp: otpCode);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to send OTP: $e');
-      print('Error sending OTP: $e');
+      Get.snackbar('Error', 'Error while generate otp: $e');
     }
   }
 }

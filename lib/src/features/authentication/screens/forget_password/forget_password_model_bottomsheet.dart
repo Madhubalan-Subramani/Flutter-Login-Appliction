@@ -5,7 +5,6 @@ import '../../../../constants/font_theme.dart';
 import '../../../../constants/sizes.dart';
 import '../../../../constants/text_strings.dart';
 import 'forget_password_btn_widget.dart';
-import 'forget_password_mail_screen.dart';
 
 class ForgetPasswordScreen {
   static PersistentBottomSheetController buildShowModelBottomSheet(
@@ -13,7 +12,7 @@ class ForgetPasswordScreen {
     return showBottomSheet(
       context: context,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.5,
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
             horizontal: defaultSize, vertical: buttonHeight),
@@ -45,14 +44,17 @@ class ForgetPasswordScreen {
               },
             ),
             const SizedBox(height: md),
-            ForgetPasswordBtnWidget(
-              title: phoneNo,
-              subTitle: resetViaPhone,
-              btnIcon: Icons.mobile_friendly,
-              onTap: () {
-                Navigator.pop(context);
-                Get.toNamed('/forgetMobNumberScreen');
-              },
+            Opacity(
+              opacity: 0.3,
+              child: ForgetPasswordBtnWidget(
+                title: phoneNo,
+                subTitle: resetViaPhone,
+                btnIcon: Icons.mobile_friendly,
+                onTap: () {
+                  Navigator.pop(context);
+                  Get.toNamed('/forgetMobNumberScreen');
+                },
+              ),
             ),
           ],
         ),

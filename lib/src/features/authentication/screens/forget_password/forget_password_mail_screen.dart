@@ -44,7 +44,7 @@ class ForgetPasswordMailScreen extends StatelessWidget {
                 const SizedBox(height: defaultSize),
                 SizedBox(
                   child: ButtonWidget(
-                    buttonName: 'Next',
+                    buttonName: 'Sent Reset Link',
                     onTap: () =>
                         forgetPasswordMailController.verifyEmail(context),
                     textToUpperCase: false,
